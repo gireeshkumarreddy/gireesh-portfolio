@@ -1,5 +1,5 @@
 # showcase render (over GitHub's 100 MB limit) and local-only files
-video/
+/video/
 artifact.html
 .claude/
 *.log
