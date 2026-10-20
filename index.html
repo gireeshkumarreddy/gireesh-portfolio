@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en" class="is-loading is-gated">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Book My Design</title>
+  <meta name="description" content="A cinematic designer portfolio: selected work in identity, interface, motion and art direction.">
+  <meta name="theme-color" content="#000000">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preload" href="assets/img/reel-poster.jpg" as="image">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ===================== LOADER ===================== -->
+  <div id="loader" aria-live="polite">
+    <div class="ld__inner">
+      <p class="ld__eyebrow">Now loading</p>
+      <p class="ld__title">The Reel</p>
+      <div class="ld__bar"><i></i></div>
+      <p class="ld__count"><span id="ldCount">0</span><small>%</small></p>
+    </div>
+  </div>
+
+  <!-- scroll length for the whole film -->
+  <div id="track" aria-hidden="true"></div>
+
+  <!-- ===================== STAGE (fixed layers) ===================== -->
+  <div id="stage">
+
+    <!-- 03–05 · Design universe, crystal, explosion, skills (WebGL) -->
+    <canvas id="gl" aria-hidden="true"></canvas>
+    <div id="skills" aria-hidden="true">
+      <div class="sk__shade"></div>
+      <div class="sk__labels" id="skLabels"></div>
+      <div class="sk__panel">
+        <p class="eyebrow"><span>05</span>Capabilities</p>
+        <h2 class="sk__title">Every fragment<br>is a <em>discipline.</em></h2>
+        <p class="sk__tools">Figma · After Effects · Blender · Cinema 4D · Photoshop · Illustrator · Spline · Framer</p>
+      </div>
+    </div>
+    <div id="uniCopy" aria-hidden="true">
+      <p class="eyebrow"><span>03</span>The Design Universe</p>
+      <h2 class="uni__title">Where the human hand<br>meets the <em>machine.</em></h2>
+    </div>
+
+    <!-- 01–02 · Reel + hero ring -->
+    <section id="hero" class="layer" aria-label="Showreel">
+      <div class="hero__frame" id="heroFrame">
+        <div id="reel">
+          <img class="reel__poster" src="assets/img/reel-poster.jpg" alt="">
+          <video id="reelVideo" src="assets/video/reel.mp4" playsinline loop preload="auto" muted></video>
+          <div class="reel__grade"></div>
+        </div>
+        <div class="hero__glow"></div>
+        <div class="ring" id="ring"></div>
+      </div>
+      <div class="hero__ui">
+        <button class="hero__arrow hero__arrow--l" id="ringPrev" aria-label="Rotate work ring left">
+          <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <button class="hero__arrow hero__arrow--r" id="ringNext" aria-label="Rotate work ring right">
+          <svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div class="hero__caption">
+          <p class="eyebrow"><span>02</span>Showreel</p>
+          <p class="hero__line">Selected Work · Design · Experience</p>
+        </div>
+        <a class="hero__cta" href="#universe" data-goto="universe" data-cursor="Enter">
+          <span>Explore Work</span>
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <p class="hero__hint">Drag the ring · Hover a frame · Scroll to dive in</p>
+        <div class="ring-tip" id="ringTip"><b></b><span></span></div>
+      </div>
+    </section>
+
+    <!-- 06 · Camera -->
+    <section id="camera" class="layer" aria-label="Camera">
+      <div class="cam__beam" id="camBeam">
+        <div class="cam__beam-text" id="camBeamText"></div>
+        <canvas class="cam__dust" id="camDust"></canvas>
+        <div class="cam__beam-core"></div>
+      </div>
+      <div class="cam__rig" id="camRig">
+        <img class="cam__img" src="assets/img/camera.jpg" alt="Cinema camera with lens, held in hand">
+        <div class="cam__rim"></div>
+        <div class="cam__redwash"></div>
+        <i class="cam__tally" id="camTally"></i>
+        <i class="cam__glint"></i>
+      </div>
+      <div class="cam__hud" id="camHud">
+        <span class="hud__rec"><i></i>REC</span>
+        <span class="hud__tc" id="camTC">00:00:00:00</span>
+        <span class="hud__spec">4K · 24P · ƒ1.8 · ISO 800 · 180°</span>
+        <i class="hud__corner hud__corner--tl"></i><i class="hud__corner hud__corner--tr"></i>
+        <i class="hud__corner hud__corner--bl"></i><i class="hud__corner hud__corner--br"></i>
+      </div>
+      <div class="cam__notes" id="camNotes">
+        <span class="note" style="--x:24%;--y:20%"><b>01</b>Composition</span>
+        <span class="note" style="--x:34%;--y:78%"><b>02</b>Light</span>
+        <span class="note" style="--x:8%;--y:86%"><b>03</b>Colour</span>
+      </div>
+      <div class="cam__copy" id="camCopy">
+        <figure class="cam__frame cam__frame--a"><img src="assets/img/avatar.jpg" alt=""></figure>
+        <figure class="cam__frame cam__frame--b"><img src="assets/img/ring-glass.jpg" alt=""></figure>
+        <div class="cam__headline">
+          <p class="cam__label cam__label--a">Minimalist<br>Design</p>
+          <h2 class="cam__title"><span>A Designer’s</span><span>Portfolio in Motion</span></h2>
+          <p class="cam__label cam__label--b">Emotional<br>Storytelling</p>
+        </div>
+      </div>
+      <div class="cam__flood" id="camFlood"></div>
+    </section>
+
+    <!-- 07 · Studio (reference video replica) -->
+    <section id="studio" class="layer" aria-label="Studio and contact">
+      <div class="st__scene" id="stScene">
+        <div class="st__plate">
+          <img class="st__photo" src="assets/img/designer-shades.jpg" alt="Portrait of the designer in sunglasses">
+          <div class="st__dim"></div>
+          <canvas class="st__mark" id="stMark" aria-hidden="true"></canvas>
+          <div class="st__ring" id="stRing"><div class="st__band" id="stBand"></div></div>
+        </div>
+      </div>
+      <header class="st__head">
+        <div class="st__id"><b data-cfg="name"></b><span data-cfg="role"></span></div>
+        <div class="st__right">
+          <span class="st__time"><em>Design Time</em><b id="stClock">00:00:00</b></span>
+          <a class="st__hire" data-cfg-href="mailto" data-cursor="Hire">Hire for Design <i>
+            <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></i></a>
+        </div>
+      </header>
+      <div class="st__dock">
+        <button class="st__btn st__work" id="stWork" data-cursor="Work">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg>
+          <span>Selected Work</span>
+        </button>
+        <a class="st__btn st__x" id="stX" data-cfg-href="social" target="_blank" rel="noopener" aria-label="Profile on X">
+          <svg viewBox="0 0 24 24"><path d="M17.8 3h3.1l-6.8 7.7L22 21h-6.2l-4.9-6.4L5.3 21H2.2l7.3-8.3L2 3h6.4l4.4 5.8L17.8 3zm-1.1 16.2h1.7L7.4 4.7H5.6l11.1 14.5z"/></svg>
+        </a>
+      </div>
+      <div class="st__profile" id="stProfile" aria-hidden="true">
+        <div class="pf__banner"><canvas id="pfMark"></canvas></div>
+        <img class="pf__avatar" src="assets/img/avatar.jpg" alt="">
+        <span class="pf__follow">Follow</span>
+        <p class="pf__name"><b data-cfg="name"></b>
+          <svg viewBox="0 0 24 24" class="pf__badge"><path d="M12 1.8l2.6 1.9 3.2-.1 1 3 2.6 1.9-1 3.1 1 3.1-2.6 1.9-1 3-3.2-.1L12 22.2l-2.6-1.9-3.2.1-1-3-2.6-1.9 1-3.1-1-3.1 2.6-1.9 1-3 3.2.1z"/><path d="M8 12.2l2.7 2.6L16.3 9" fill="none" stroke="#fff" stroke-width="2"/></svg>
+        </p>
+        <p class="pf__handle" data-cfg="handle"></p>
+        <p class="pf__bio"><span data-cfg="role"></span> crafting cinematic web experiences. Open for projects.</p>
+        <p class="pf__meta"><span>◎ UX &amp; Motion</span><span>✦ Let’s build your website</span><span>▣ Joined 2026</span></p>
+      </div>
+      <footer class="st__foot">
+        <span>© 2026 <span data-cfg="name"></span></span>
+        <a data-cfg-href="mailto" data-cfg="email" data-cursor="Write"></a>
+        <svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg>
+      </footer>
+    </section>
+
+    <!-- 01 · Opening: three-card layout -->
+    <section id="opening" class="layer" aria-label="Opening">
+      <div class="op__bg"><img src="assets/img/opening-bg.jpg" alt=""></div>
+      <div class="op__shade"></div>
+      <header class="op__nav">
+        <ul class="op__links">
+          <li><a href="#reel" data-goto="reel">Home</a></li>
+          <li><a href="#universe" data-goto="universe">Work</a></li>
+          <li><a href="#camera" data-goto="camera">Motion</a></li>
+        </ul>
+        <p class="op__logo" data-cfg="wordmark"></p>
+        <ul class="op__links op__links--r">
+          <li><a href="#skills" data-goto="skills">Skills</a></li>
+          <li><a href="#studio" data-goto="studio">Contact</a></li>
+        </ul>
+        <div class="op__pill">
+          <button aria-label="Language"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9S14.6 18.4 12 21c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/></svg></button>
+          <button aria-label="Contact" data-goto="studio"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="10" r="3.2"/><path d="M6.2 18.4c1.4-2.1 3.4-3.2 5.8-3.2s4.4 1.1 5.8 3.2"/></svg></button>
+        </div>
+      </header>
+
+      <div class="op__row" id="opRow">
+        <article class="card card--side card--l" data-goto="skills" data-cursor="Skills">
+          <div class="card__media"><img src="assets/img/card-shattered.jpg" alt=""></div>
+          <div class="card__shade"></div>
+          <h2 class="card__title">Shattered</h2>
+          <div class="card__meta"><b>Shattered: Identity</b><span>Art Direction/Portrait/Glass</span></div>
+          <div class="card__rate"><svg viewBox="0 0 24 24"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8 1.1-5.7-4.3-4 5.8-.7z"/></svg>9.1/10</div>
+          <i class="card__glare"></i><i class="card__edge"></i>
+        </article>
+
+        <article class="card card--main" id="mainCard" tabindex="0" role="button" aria-label="Play the showreel" data-cursor="Play">
+          <div class="card__media"><img src="assets/img/reel-poster.jpg" alt=""></div>
+          <div class="card__shade"></div>
+          <h2 class="card__title">Portfolio</h2>
+          <div class="card__meta"><b>Selected Work • Design • Experience</b><span>Design/Creative/Showcase</span></div>
+          <div class="card__rate"><svg viewBox="0 0 24 24"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8 1.1-5.7-4.3-4 5.8-.7z"/></svg>9.3/10</div>
+          <i class="card__play"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z"/></svg></i>
+          <i class="card__glare"></i><i class="card__edge"></i>
+        </article>
+
+        <article class="card card--side card--r" data-goto="genesis" data-cursor="Genesis">
+          <div class="card__media"><img src="assets/img/card-genesis.jpg" alt=""></div>
+          <div class="card__shade"></div>
+          <h2 class="card__title">Genesis</h2>
+          <div class="card__meta"><b>Genesis: Human × Machine</b><span>3D/Concept/Motion</span></div>
+          <div class="card__rate"><svg viewBox="0 0 24 24"><path d="M12 3.6l2.5 5.3 5.8.7-4.3 4 1.1 5.7L12 16.5l-5.1 2.8 1.1-5.7-4.3-4 5.8-.7z"/></svg>8.9/10</div>
+          <i class="card__glare"></i><i class="card__edge"></i>
+        </article>
+      </div>
+
+      <form class="op__search" id="opSearch" autocomplete="off">
+        <svg viewBox="0 0 24 24" class="op__search-ico"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+        <input id="opSearchInput" type="text" aria-label="Search the portfolio" placeholder="Search Brand Identity, Motion, UI/UX, Art Direction…">
+        <svg viewBox="0 0 24 24" class="op__mic"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg>
+      </form>
+      <p class="op__hint"><i></i>Click the reel to begin</p>
+    </section>
+
+    <div id="veil"></div>
+    <div id="flash"></div>
+  </div>
+
+  <!-- ===================== CHROME ===================== -->
+  <header id="bar">
+    <a class="bar__mark" data-goto="reel" data-cfg="wordmark"></a>
+    <button class="bar__sound" id="soundBtn" aria-pressed="true">
+      <span class="eq"><i></i><i></i><i></i><i></i></span><span class="bar__sound-t">Sound on</span>
+    </button>
+  </header>
+  <nav id="chapters" aria-label="Chapters"></nav>
+
+  <div id="lightbox" aria-hidden="true">
+    <figure><img alt=""><figcaption><b></b><span></span></figcaption></figure>
+  </div>
+
+  <div id="rail" aria-hidden="true"><i></i></div>
+  <div id="cursor" aria-hidden="true"><i class="cur__dot"></i><i class="cur__ring"><em></em><b class="cur__wheel"><span></span></b></i></div>
+  <div id="grain" aria-hidden="true"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/universe.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
